@@ -1,0 +1,1 @@
+Basicamente estou fazendo uma página utilizando o framework React junto com uma API em flask(Python) para eu poder mostrar na tela os resultados das soluções das métricas escolhidas.

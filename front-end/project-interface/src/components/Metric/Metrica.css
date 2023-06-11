@@ -1,0 +1,14 @@
+.MetricField {
+    display: flex;
+    justify-content: center;
+
+    margin: 50px;
+}
+
+select {
+    margin-left: 15px;
+    background-color: var(--main-bg-color);
+    color: black;
+
+    text-align: center;
+}

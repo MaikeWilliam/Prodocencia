@@ -10,38 +10,38 @@ import numpy as np
 from sympy import symbols, diag
 from einsteinpy.symbolic import MetricTensor, RiemannCurvatureTensor
 
-
+# Criando aplicação
 app = Flask(__name__)
 CORS(app)
 
-
+# Rota Default
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({ "message": "Hello world" })
 
-
+# Rota Tensores
 @app.route('/tensores', methods=['POST'])
 def get_tensores():
 
     data = request.json
-    rieman = data.get('rieman')
+    riemann = data.get('riemann')
     ricci = data.get('ricci')
 
 
-    if (rieman):
+    if (riemann):
         t, x, y, z = symbols('t x y z')
         M = [[-1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
         metric = MetricTensor(M, (t, x, y, z))
         R = RiemannCurvatureTensor.from_metric(metric)
-        rieman = np.array(R.tensor().tolist(), dtype=float).tolist()
+        riemann = np.array(R.tensor().tolist(), dtype=float).tolist()
     else:
-        rieman = None
+        riemann = None
 
     if (ricci):
         ricci = [4,5,21,312,421,12,412,4]
     else:
         ricci = None
 
-    return jsonify({ "rieman": rieman, "ricci": ricci })
+    return jsonify({ "riemann": riemann, "ricci": ricci })
 
 app.run() 
