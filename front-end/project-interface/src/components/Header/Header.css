@@ -4,8 +4,7 @@
     align-items: center;
 
     background-color: var(--main-bg-color);
-    min-height: 200px;
-    /* height: 25vh; */
+    min-height: 20vh;
 
     font-size: 1.3rem;
 }

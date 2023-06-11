@@ -20,7 +20,7 @@ def index():
     return jsonify({ "message": "Hello world" })
 
 # Rota Tensores
-@app.route('/tensores', methods=['POST'])
+@app.route('/tensores', methods=['GET'])
 def get_tensores():
 
     data = request.json
