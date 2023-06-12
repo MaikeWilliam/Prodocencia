@@ -5,7 +5,7 @@ export default function Card(props) {
     return (
         <div className="CardField">
             <div className="Title">{props.title}</div>
-            <div className="Content">A</div>
+            <div className="Content">{props.result}</div>
         </div>
     );
 }

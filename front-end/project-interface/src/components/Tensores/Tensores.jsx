@@ -1,12 +1,17 @@
 import React, { useState } from "react";
-
 import "./Tensores.css";
+
 import Card from "../Card/Card";
+
+import api from "axios";
 
 export default function Tensores() {
     const [ricciChecked, setRicciChecked] = useState(false);
     const [riemannChecked, setRiemannChecked] = useState(false);
     const [exibirCards, setExibirCards] = useState(false);
+
+    const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
+    const [riemann, setRiemann] = useState(null); //Estado para armazenar a solução
 
     const handleRicciChange = (event) => {
         setRicciChecked(event.target.checked);
@@ -17,6 +22,34 @@ export default function Tensores() {
     };
 
     const handleCalcular = () => {
+        if (ricciChecked) {
+            const data = {
+                ricci: "ricci",
+            };
+
+            api.post("http://127.0.0.1:5000/tensores", data)
+                .then((response) => {
+                    setRicci(response.data.ricci); // Armazene a solução do tensor de Ricci no estado
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
+        if (riemannChecked) {
+            const data = {
+                riemann: "riemann",
+            };
+
+            api.post("http://127.0.0.1:5000/tensores", data)
+                .then((response) => {
+                    setRiemann(response.data.riemann); // Armazene a solução do tensor de Riemann no estado
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+
         setExibirCards(true);
     };
 
@@ -59,8 +92,12 @@ export default function Tensores() {
             </div>
             {exibirCards && (
                 <div className="Cards">
-                    {ricciChecked && <Card title="Tensor de Ricci" />}
-                    {riemannChecked && <Card title="Tensor de Riemann" />}
+                    {ricciChecked && ricci && (
+                        <Card title="Tensor de Ricci" result={ricci} />
+                    )}
+                    {riemannChecked && riemann && (
+                        <Card title="Tensor de Riemann" result={riemann} />
+                    )}
                 </div>
             )}
         </div>
