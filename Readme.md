@@ -9,3 +9,7 @@ Como baixar o projeto:
 3 - Na pasta project-interface dar um "npm install"
 
 4 - Na pasta api_flask dar um "pip install -r requirements.txt"
+
+5 - Para inicializar a página web entre em Prodocencia/front-end/project-interface e dê um "npm run dev"
+
+6 - Para inicializar a api entre em Prodocencia/api_flask e dê um "python app.py"
