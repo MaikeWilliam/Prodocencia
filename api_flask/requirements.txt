@@ -1,2 +1,3 @@
 flask
-eisteinpy
+einsteinpy
+sympy

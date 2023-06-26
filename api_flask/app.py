@@ -1,14 +1,21 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from math import pow
+#Einsteinpy
+import sympy
+from sympy import symbols, sin, Symbol, Function, var
+from einsteinpy.symbolic import (MetricTensor,
+                                 RicciTensor, RicciScalar,
+                                 RiemannCurvatureTensor)
+
+# from math import pow
 
 # Numpy
 import numpy as np
 
-# Einstein Py
-from sympy import symbols, diag
-from einsteinpy.symbolic import MetricTensor, RiemannCurvatureTensor
+# # Einstein Py
+# from sympy import symbols, diag
+# from einsteinpy.symbolic import MetricTensor, RiemannCurvatureTensor
 
 # Criando aplicação
 app = Flask(__name__)
@@ -20,28 +27,117 @@ def index():
     return jsonify({ "message": "Hello world" })
 
 # Rota Tensores
-@app.route('/tensores', methods=['POST'])
-def get_tensores():
+@app.route('/tensores', methods=['POST']) 
+def calcular_tensores():
 
-    data = request.json
-    riemann = data.get('riemann')
-    ricci = data.get('ricci')
+    metrica = request.json['metrica']
+    tipo = request.json['tipo']
 
-
-    if (riemann):
-        t, x, y, z = symbols('t x y z')
-        M = [[-1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
-        metric = MetricTensor(M, (t, x, y, z))
-        R = RiemannCurvatureTensor.from_metric(metric)
-        riemann = np.array(R.tensor().tolist(), dtype=float).tolist()
+    print(metrica, tipo)
+    if metrica == "Schwarzschild":
+        if tipo == "ricci":
+            # Cálculo do tensor de Ricci para a métrica Schwarzschild
+            result = calcular_tensor_de_ricci_schwarzschild()
+        elif tipo == "riemann":
+            # Cálculo do tensor de Riemann para a métrica Schwarzschild
+            result = calcular_tensor_de_riemann_schwarzschild()
+        else:
+            return jsonify(error='Tipo de tensor inválido')
+    elif metrica == "Kerr":
+        if tipo == "ricci":
+            # Cálculo do tensor de Ricci para a métrica Kerr
+            result = calcular_tensor_de_ricci_kerr()
+        elif tipo == "riemann":
+            # Cálculo do tensor de Riemann para a métrica Kerr
+            result = calcular_tensor_de_riemann_kerr()
+        else:
+            return jsonify(error='Tipo de tensor inválido')
+    elif metrica == "Kerr-Newman":
+        if tipo == "ricci":
+            # Cálculo do tensor de Ricci para a métrica Kerr-Newman
+            result = calcular_tensor_de_ricci_kerr_newman()
+        elif tipo == "riemann":
+            # Cálculo do tensor de Riemann para a métrica Kerr-Newman
+            result = calcular_tensor_de_riemann_kerr_newman()
+        else:
+            return jsonify(error='Tipo de tensor inválido')
     else:
-        riemann = None
+        return jsonify(error='Métrica inválida')
+    
+    return jsonify(result=result)
 
-    if (ricci):
-        ricci = [4,5,21,312,421,12,412,4]
-    else:
-        ricci = None
+# Funções para calcular os tensores de Ricci e Riemann para cada métrica
 
-    return jsonify({ "riemann": riemann, "ricci": ricci })
+def calcular_tensor_de_ricci_schwarzschild():
+    # Define as variáveis da métrica
+    syms = sympy.symbols("t r theta phi")
+    t, r, th, ph = syms
+
+    # Definição da constante k
+    k = var('m')
+
+    # Define o tensor da métrica
+    m = sympy.diag(-(1-(2*k)/r), 1/(1-(2*k)/r),
+               r**2,
+               r**2*(sin(th))**2).tolist()
+    
+    metric = MetricTensor(m, syms)
+
+    ricci = RicciTensor.from_metric(metric)
+
+    return str(ricci.tensor())
+
+def calcular_tensor_de_riemann_schwarzschild():
+    # Define as variáveis da métrica
+    syms = sympy.symbols("t r theta phi")
+    t, r, th, ph = syms
+
+    # Definição da constante k
+    k = var('m')
+
+    # Define o tensor da métrica
+    m = sympy.diag(-(1-(2*k)/r), 1/(1-(2*k)/r),
+               r**2,
+               r**2*(sin(th))**2).tolist()
+    
+    metric = MetricTensor(m, syms)
+
+    riemann = RiemannCurvatureTensor.from_metric(metric)
+    
+    return str(riemann.tensor())
 
 app.run() 
+
+def calcular_tensor_de_ricci_kerr():
+    
+    pass
+
+def calcular_tensor_de_riemann_kerr():
+    
+    pass
+
+def calcular_tensor_de_ricci_kerr_newman():
+    
+    pass
+
+def calcular_tensor_de_riemann_kerr_newman():
+    
+    pass
+
+
+
+# Calcula o Escalar de Ricci-
+# flrw = RicciScalar.from_metric(metric)
+# flrw.tensor()
+
+# import sympy as sp
+
+# r = sp.symbols('r')
+# lambda_, v = sp.Function('lambda')(r), sp.Function('v')(r)
+# ode1 = lambda_.diff(r)/r + v.diff(r)/r
+# ode2 = lambda_ - v.diff(r)
+
+# solutions = sp.dsolve((ode1, ode2))
+
+# for solution in solutions:
+#     print(solution.rhs)
