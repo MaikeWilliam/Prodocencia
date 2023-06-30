@@ -8,14 +8,9 @@ from einsteinpy.symbolic import (MetricTensor,
                                  RicciTensor, RicciScalar,
                                  RiemannCurvatureTensor)
 
-# from math import pow
-
 # Numpy
 import numpy as np
 
-# # Einstein Py
-# from sympy import symbols, diag
-# from einsteinpy.symbolic import MetricTensor, RiemannCurvatureTensor
 
 # Criando aplicação
 app = Flask(__name__)
@@ -33,7 +28,6 @@ def calcular_tensores():
     metrica = request.json['metrica']
     tipo = request.json['tipo']
 
-    print(metrica, tipo)
     if metrica == "Schwarzschild":
         if tipo == "ricci":
             # Cálculo do tensor de Ricci para a métrica Schwarzschild

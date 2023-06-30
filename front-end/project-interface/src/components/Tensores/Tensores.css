@@ -42,6 +42,8 @@ button {
 
 button:hover {
     cursor: pointer;
+    background-color: rgb(91, 91, 235);
+    color: white;
 }
 
 .Botoes {
@@ -49,7 +51,4 @@ button:hover {
     justify-content: center;
 
     margin: 30px;
-}
-
-.Cards {
 }

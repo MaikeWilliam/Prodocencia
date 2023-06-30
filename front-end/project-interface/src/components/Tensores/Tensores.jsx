@@ -52,7 +52,6 @@ export default function Tensores() {
         }
 
         if (riemannChecked) {
-            console.log(metricaSelecionada);
             const data = {
                 metrica: metricaSelecionada,
                 tipo: "riemann",
