@@ -11,14 +11,16 @@ export default function Tensores() {
     const metrics = [
         { value: "Schwarzschild" },
         { value: "Kerr" },
-        { value: "Kerr-Newman" },
+        { value: "KerrNewman" },
     ];
 
     const [ricciChecked, setRicciChecked] = useState(false);
     const [riemannChecked, setRiemannChecked] = useState(false);
+    const [ricciScalarChecked, setRicciScalarChecked] = useState(false);
     const [exibirCards, setExibirCards] = useState(false);
     const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
     const [riemann, setRiemann] = useState(null); //Estado para armazenar a solução
+    const [ricciScalar, setRicciScalar] = useState(null); //Estado para armazenar a solução
     const [metricaSelecionada, setMetricaSelecionada] = useState(
         metrics[0].value
     );
@@ -35,54 +37,106 @@ export default function Tensores() {
         setRiemannChecked(event.target.checked);
     };
 
+    const handleRicciScalarChange = (event) => {
+        setRicciScalarChecked(event.target.checked);
+    };
+
     const handleCalcular = () => {
-        if (ricciChecked) {
-            const data = {
-                metrica: metricaSelecionada,
-                tipo: "ricci",
-            };
+        const dataRiemann = {
+            metrica: metricaSelecionada,
+            tipo: "riemann",
+        };
 
-            api.post("http://127.0.0.1:5000/tensores", data)
-                .then((response) => {
-                    setRicci(response.data.result); // Armazene a solução do tensor de Ricci no estado
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
+        api.post("http://127.0.0.1:5000/tensores", dataRiemann)
+            .then((response) => {
+                setRiemann(response.data.result); // Armazene a solução do tensor de Riemann no estado
 
-        if (riemannChecked) {
-            const data = {
-                metrica: metricaSelecionada,
-                tipo: "riemann",
-            };
+                if (ricciChecked) {
+                    const dataRicci = {
+                        metrica: metricaSelecionada,
+                        tipo: "ricci",
+                    };
 
-            api.post("http://127.0.0.1:5000/tensores", data)
-                .then((response) => {
-                    setRiemann(response.data.result); // Armazene a solução do tensor de Riemann no estado
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
+                    api.post("http://127.0.0.1:5000/tensores", dataRicci)
+                        .then((response) => {
+                            setRicci(response.data.result); // Armazene a solução do tensor de Ricci no estado
 
-        setExibirCards(true);
+                            if (ricciScalarChecked) {
+                                const dataRicciScalar = {
+                                    metrica: metricaSelecionada,
+                                    tipo: "ricciScalar",
+                                };
+
+                                api.post(
+                                    "http://127.0.0.1:5000/tensores",
+                                    dataRicciScalar
+                                )
+                                    .then((response) => {
+                                        setRicciScalar(response.data.result); // Armazene a solução do Escalar de Ricci no estado
+                                        setExibirCards(true);
+                                    })
+                                    .catch((error) => {
+                                        console.error(error);
+                                    });
+                            } else {
+                                setExibirCards(true);
+                            }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                } else if (ricciScalarChecked) {
+                    const dataRicciScalar = {
+                        metrica: metricaSelecionada,
+                        tipo: "ricciScalar",
+                    };
+
+                    api.post("http://127.0.0.1:5000/tensores", dataRicciScalar)
+                        .then((response) => {
+                            setRicciScalar(response.data.result); // Armazene a solução do Escalar de Ricci no estado
+                            setExibirCards(true);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                } else {
+                    setExibirCards(true);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     const handleResetar = () => {
         setExibirCards(false);
         setRicciChecked(false);
         setRiemannChecked(false);
-        setMetricaSelecionada("");
+        setRicciScalarChecked(false);
+        setMetricaSelecionada(metrics[0].value);
     };
 
     return (
         <>
-            <Metrica onChange={handleMetricaChange} options={metrics} />
+            <Metrica
+                onChange={handleMetricaChange}
+                options={metrics}
+                value={metricaSelecionada}
+            />
             <div className="Tensores">
                 <fieldset>
                     <legend>Escolha o que deseja calcular</legend>
                     <div className="Tensores-checkbox">
+                        <div>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={riemannChecked}
+                                    onChange={handleRiemannChange}
+                                />
+                                Tensor de Riemann
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input
@@ -97,10 +151,10 @@ export default function Tensores() {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={riemannChecked}
-                                    onChange={handleRiemannChange}
+                                    checked={ricciScalarChecked}
+                                    onChange={handleRicciScalarChange}
                                 />
-                                Tensor de Riemann
+                                Escalar de Ricci
                             </label>
                         </div>
                     </div>
@@ -111,11 +165,17 @@ export default function Tensores() {
                 </div>
                 {exibirCards && (
                     <div className="Cards">
+                        {riemannChecked && riemann && (
+                            <Card title="Tensor de Riemann" result={riemann} />
+                        )}
                         {ricciChecked && ricci && (
                             <Card title="Tensor de Ricci" result={ricci} />
                         )}
-                        {riemannChecked && riemann && (
-                            <Card title="Tensor de Riemann" result={riemann} />
+                        {ricciScalarChecked && ricciScalar && (
+                            <Card
+                                title="Escalar de Ricci"
+                                result={ricciScalar}
+                            />
                         )}
                     </div>
                 )}
