@@ -39,7 +39,9 @@ def calcular_tensores():
     
     tensor = Tensor(metric=metrica)
     
-    if tipo == 'riemann':
+    if tipo == 'tensor':
+        result = tensor.get_tensor()
+    elif tipo == 'riemann':
         result = tensor.get_riemann_tensor()
     elif tipo == 'ricci':
         result = tensor.get_ricci_tensor()
