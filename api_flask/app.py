@@ -21,6 +21,8 @@ from einsteinpy.symbolic.predefined import (AlcubierreWarp, AntiDeSitter,
                                             MinkowskiCartesian, MinkowskiPolar,
                                             ReissnerNordstorm, Schwarzschild)
 
+
+
 # Criando aplicação
 app = Flask(__name__)
 CORS(app)
@@ -29,6 +31,13 @@ CORS(app)
 @app.route('/', methods=['GET'])
 def index():
     return jsonify({ "message": "Hello world" })
+
+@app.route('/metricas' , methods=['GET'])
+def get_metricas():
+    metricas = [
+        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'Davidson'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}
+    ]
+    return jsonify(metricas)
 
 # Rota Tensores
 @app.route('/tensores', methods=['POST']) 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Tensores.css";
 
@@ -8,12 +8,9 @@ import Card from "../Card/Card";
 import api from "axios";
 
 export default function Tensores() {
-    const metrics = [
-        { value: "Schwarzschild" },
-        { value: "Kerr" },
-        { value: "KerrNewman" },
-    ];
+    
 
+    const [metricas, setMetricas] = useState([]);
     const [tensorDaMetricaChecked, setTensorDaMetricaChecked] = useState(false);
     const [ricciChecked, setRicciChecked] = useState(false);
     const [riemannChecked, setRiemannChecked] = useState(false);
@@ -23,9 +20,23 @@ export default function Tensores() {
     const [riemann, setRiemann] = useState(null); //Estado para armazenar a solução
     const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
     const [ricciScalar, setRicciScalar] = useState(null); //Estado para armazenar a solução
-    const [metricaSelecionada, setMetricaSelecionada] = useState(
-        metrics[0].value
-    );
+    const [metricaSelecionada, setMetricaSelecionada] = useState(null);
+
+    console.log(metricas)
+
+    useEffect(() => {
+        getMetricas();
+    }, []);
+
+    const getMetricas = () => {
+        api.get("http://127.0.0.1:5000/metricas")
+            .then((response) => {
+                setMetricas(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     const handleMetricaChange = (event) => {
         setMetricaSelecionada(event.target.value);
@@ -116,14 +127,14 @@ export default function Tensores() {
         setRiemannChecked(false);
         setRicciChecked(false);
         setRicciScalarChecked(false);
-        setMetricaSelecionada(metrics[0].value);
+        setMetricaSelecionada(metricas[0].value);
     };
 
     return (
         <>
             <Metrica
                 onChange={handleMetricaChange}
-                options={metrics}
+                options={metricas}
                 value={metricaSelecionada}
             />
             <div className="Tensores">
