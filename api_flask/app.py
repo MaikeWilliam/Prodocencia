@@ -1,6 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+# Numpy
+import numpy as np
+
 #Einsteinpy
 import sympy
 from sympy import symbols, sin, Symbol, Function, var
@@ -8,8 +11,16 @@ from einsteinpy.symbolic import (MetricTensor,
                                  RicciTensor, RicciScalar,
                                  RiemannCurvatureTensor)
 
-# Numpy
-import numpy as np
+from einsteinpy.symbolic.predefined import (AlcubierreWarp, AntiDeSitter,
+                                            AntiDeSitterStatic,
+                                            BarriolaVilekin, BertottiKasner,
+                                            BesselGravitationalWave, CMetric,
+                                            Davidson, DeSitter, Ernst, Godel,
+                                            JanisNewmanWinicour, Kerr,
+                                            KerrNewman, Minkowski,
+                                            MinkowskiCartesian, MinkowskiPolar,
+                                            ReissnerNordstorm, Schwarzschild)
+
 
 
 # Criando aplicação
@@ -21,117 +32,113 @@ CORS(app)
 def index():
     return jsonify({ "message": "Hello world" })
 
+@app.route('/metricas' , methods=['GET'])
+def get_metricas():
+    metricas = [
+        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'Davidson'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}
+    ]
+    return jsonify(metricas)
+
 # Rota Tensores
 @app.route('/tensores', methods=['POST']) 
 def calcular_tensores():
 
     metrica = request.json['metrica']
     tipo = request.json['tipo']
-
-    if metrica == "Schwarzschild":
-        if tipo == "ricci":
-            # Cálculo do tensor de Ricci para a métrica Schwarzschild
-            result = calcular_tensor_de_ricci_schwarzschild()
-        elif tipo == "riemann":
-            # Cálculo do tensor de Riemann para a métrica Schwarzschild
-            result = calcular_tensor_de_riemann_schwarzschild()
-        else:
-            return jsonify(error='Tipo de tensor inválido')
-    elif metrica == "Kerr":
-        if tipo == "ricci":
-            # Cálculo do tensor de Ricci para a métrica Kerr
-            result = calcular_tensor_de_ricci_kerr()
-        elif tipo == "riemann":
-            # Cálculo do tensor de Riemann para a métrica Kerr
-            result = calcular_tensor_de_riemann_kerr()
-        else:
-            return jsonify(error='Tipo de tensor inválido')
-    elif metrica == "Kerr-Newman":
-        if tipo == "ricci":
-            # Cálculo do tensor de Ricci para a métrica Kerr-Newman
-            result = calcular_tensor_de_ricci_kerr_newman()
-        elif tipo == "riemann":
-            # Cálculo do tensor de Riemann para a métrica Kerr-Newman
-            result = calcular_tensor_de_riemann_kerr_newman()
-        else:
-            return jsonify(error='Tipo de tensor inválido')
+    
+    tensor = Tensor(metric=metrica)
+    
+    if tipo == 'tensor':
+        result = tensor.get_tensor()
+    elif tipo == 'riemann':
+        result = tensor.get_riemann_tensor()
+    elif tipo == 'ricci':
+        result = tensor.get_ricci_tensor()
+    elif tipo == 'ricciScalar':
+        result = tensor.get_ricci_scalar()
     else:
-        return jsonify(error='Métrica inválida')
+        return jsonify(error='Tipo de tensor inválido')
     
     return jsonify(result=result)
 
-# Funções para calcular os tensores de Ricci e Riemann para cada métrica
+class Tensor():
+    def __init__(self, metric='Schwarzschild'):
+        self.__metric = self.__get_metric(metric)
 
-def calcular_tensor_de_ricci_schwarzschild():
-    # Define as variáveis da métrica
-    syms = sympy.symbols("t r theta phi")
-    t, r, th, ph = syms
+    def __get_metric(self, metric_name):  # noqa: C901
+        """Retorna uma metrica prédefinida usando o nome informado."""
+        if metric_name == 'AlcubierreWarp':
+            return AlcubierreWarp()
+        elif metric_name == 'AntiDeSitter':
+            return AntiDeSitter()
+        elif metric_name == 'AntiDeSitterStatic':
+            return AntiDeSitterStatic()
+        elif metric_name == 'BarriolaVilekin':
+            return BarriolaVilekin()
+        elif metric_name == 'BertottiKasner':
+            return BertottiKasner()
+        elif metric_name == 'BesselGravitationalWave':
+            return BesselGravitationalWave()
+        elif metric_name == 'CMetric':
+            return CMetric()
+        elif metric_name == 'Davidson':
+            return Davidson()
+        elif metric_name == 'DeSitter':
+            return DeSitter()
+        elif metric_name == 'Ernst':
+            return Ernst()
+        elif metric_name == 'Godel':
+            return Godel()
+        elif metric_name == 'JanisNewmanWinicour':
+            return JanisNewmanWinicour()
+        elif metric_name == 'Kerr':
+            return Kerr()
+        elif metric_name == 'KerrNewman':
+            return KerrNewman()
+        elif metric_name == 'Minkowski':
+            return Minkowski()
+        elif metric_name == 'MinkowskiCartesian':
+            return MinkowskiCartesian()
+        elif metric_name == 'MinkowskiPolar':
+            return MinkowskiPolar()
+        elif metric_name == 'ReissnerNordstorm':
+            return ReissnerNordstorm()
+        elif metric_name == 'Schwarzschild':
+            return Schwarzschild()
+        else:
+            raise ValueError('Metrica não implementada.')
+            
+    def get_tensor(self):
+        """Retorna o tensor da metrica.
 
-    # Definição da constante k
-    k = var('m')
+        Resposta para Schwarzschild:
+            [[1 - r_s/r, 0, 0, 0], [0, -1/(c**2*(1 - r_s/r)), 0, 0], [0, 0, -r**2/c**2, 0], [0, 0, 0, -r**2*sin(theta)**2/c**2]]
+        """
+        return str(self.__metric.tensor())
 
-    # Define o tensor da métrica
-    m = sympy.diag(-(1-(2*k)/r), 1/(1-(2*k)/r),
-               r**2,
-               r**2*(sin(th))**2).tolist()
-    
-    metric = MetricTensor(m, syms)
+    def get_ricci_scalar(self):
+        """Retorna o escalar de Ricci.
 
-    ricci = RicciTensor.from_metric(metric)
+        Resposta para Schwarzschild:
+            0
+        """
+        return str(RicciScalar.from_metric(self.__metric).expr)
 
-    return str(ricci.tensor())
+    def get_ricci_tensor(self):
+        """Retorna o tensor de Ricci.
 
-def calcular_tensor_de_riemann_schwarzschild():
-    # Define as variáveis da métrica
-    syms = sympy.symbols("t r theta phi")
-    t, r, th, ph = syms
+        Resposta para Schwarzschild:
+            [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
+        """
+        return str(RicciTensor.from_metric(self.__metric).tensor())
 
-    # Definição da constante k
-    k = var('m')
+    def get_riemann_tensor(self):
+        """Retorna o tensor de Riemann.
 
-    # Define o tensor da métrica
-    m = sympy.diag(-(1-(2*k)/r), 1/(1-(2*k)/r),
-               r**2,
-               r**2*(sin(th))**2).tolist()
-    
-    metric = MetricTensor(m, syms)
+        Resposta para Schwarzschild:
+            [[[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, r_s/(r**2*(r - r_s)), 0, 0], [-r_s/(r**2*(r - r_s)), 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, -r_s/(2*r), 0], [0, 0, 0, 0], [r_s/(2*r), 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, -r_s*sin(theta)**2/(2*r)], [0, 0, 0, 0], [0, 0, 0, 0], [r_s*sin(theta)**2/(2*r), 0, 0, 0]]], [[[0, r_s*c**2*(r - r_s)/r**4, 0, 0], [r_s*c**2*(-r + r_s)/r**4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, -r_s/(2*r), 0], [0, r_s/(2*r), 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, -r_s*sin(theta)**2/(2*r)], [0, 0, 0, 0], [0, r_s*sin(theta)**2/(2*r), 0, 0]]], [[[0, 0, r_s*c**2*(-r + r_s)/(2*r**4), 0], [0, 0, 0, 0], [r_s*c**2*(r - r_s)/(2*r**4), 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, r_s/(2*r**2*(r - r_s)), 0], [0, -r_s/(2*r**2*(r - r_s)), 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, r_s*sin(theta)**2/r], [0, 0, -r_s*sin(theta)**2/r, 0]]], [[[0, 0, 0, r_s*c**2*(-r + r_s)/(2*r**4)], [0, 0, 0, 0], [0, 0, 0, 0], [r_s*c**2*(r - r_s)/(2*r**4), 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, r_s/(2*r**2*(r - r_s))], [0, 0, 0, 0], [0, -r_s/(2*r**2*(r - r_s)), 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, -r_s/r], [0, 0, r_s/r, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]]
+        """
+        return str(RiemannCurvatureTensor.from_metric(self.__metric).tensor())
 
-    riemann = RiemannCurvatureTensor.from_metric(metric)
-    
-    return str(riemann.tensor())
-
-app.run() 
-
-def calcular_tensor_de_ricci_kerr():
-    
-    pass
-
-def calcular_tensor_de_riemann_kerr():
-    
-    pass
-
-def calcular_tensor_de_ricci_kerr_newman():
-    
-    pass
-
-def calcular_tensor_de_riemann_kerr_newman():
-    
-    pass
-
-
-
-# Calcula o Escalar de Ricci-
-# flrw = RicciScalar.from_metric(metric)
-# flrw.tensor()
-
-# import sympy as sp
-
-# r = sp.symbols('r')
-# lambda_, v = sp.Function('lambda')(r), sp.Function('v')(r)
-# ode1 = lambda_.diff(r)/r + v.diff(r)/r
-# ode2 = lambda_ - v.diff(r)
-
-# solutions = sp.dsolve((ode1, ode2))
-
-# for solution in solutions:
-#     print(solution.rhs)
+if __name__ == "__main__":
+    app.run()

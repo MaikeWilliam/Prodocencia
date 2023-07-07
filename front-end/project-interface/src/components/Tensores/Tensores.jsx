@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import "./Tensores.css";
 
@@ -8,81 +8,159 @@ import Card from "../Card/Card";
 import api from "axios";
 
 export default function Tensores() {
-    const metrics = [
-        { value: "Schwarzschild" },
-        { value: "Kerr" },
-        { value: "Kerr-Newman" },
-    ];
+    
 
+    const [metricas, setMetricas] = useState([]);
+    const [tensorDaMetricaChecked, setTensorDaMetricaChecked] = useState(false);
     const [ricciChecked, setRicciChecked] = useState(false);
     const [riemannChecked, setRiemannChecked] = useState(false);
+    const [ricciScalarChecked, setRicciScalarChecked] = useState(false);
     const [exibirCards, setExibirCards] = useState(false);
-    const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
+    const [tensorDaMetrica, setTensorDaMetrica] = useState(null);
     const [riemann, setRiemann] = useState(null); //Estado para armazenar a solução
-    const [metricaSelecionada, setMetricaSelecionada] = useState(
-        metrics[0].value
-    );
+    const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
+    const [ricciScalar, setRicciScalar] = useState(null); //Estado para armazenar a solução
+    const [metricaSelecionada, setMetricaSelecionada] = useState(null);
+
+    console.log(metricas)
+
+    useEffect(() => {
+        getMetricas();
+    }, []);
+
+    const getMetricas = () => {
+        api.get("http://127.0.0.1:5000/metricas")
+            .then((response) => {
+                setMetricas(response.data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    };
 
     const handleMetricaChange = (event) => {
         setMetricaSelecionada(event.target.value);
     };
 
-    const handleRicciChange = (event) => {
-        setRicciChecked(event.target.checked);
+    const handleTensorDaMetricaChange = (event) => {
+        setTensorDaMetricaChecked(event.target.checked);
     };
 
     const handleRiemannChange = (event) => {
         setRiemannChecked(event.target.checked);
     };
 
+    const handleRicciChange = (event) => {
+        setRicciChecked(event.target.checked);
+    };
+
+    const handleRicciScalarChange = (event) => {
+        setRicciScalarChecked(event.target.checked);
+    };
+
     const handleCalcular = () => {
-        if (ricciChecked) {
-            const data = {
-                metrica: metricaSelecionada,
-                tipo: "ricci",
-            };
+        const dataTensorDaMetrica = {
+            metrica: metricaSelecionada,
+            tipo: "tensor",
+        };
 
-            api.post("http://127.0.0.1:5000/tensores", data)
-                .then((response) => {
-                    setRicci(response.data.result); // Armazene a solução do tensor de Ricci no estado
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
+        api.post("http://127.0.0.1:5000/tensores", dataTensorDaMetrica)
+            .then((response) => {
+                setTensorDaMetrica(response.data.result);
 
-        if (riemannChecked) {
-            const data = {
-                metrica: metricaSelecionada,
-                tipo: "riemann",
-            };
+                if (riemannChecked) {
+                    const dataRiemann = {
+                        metrica: metricaSelecionada,
+                        tipo: "riemann",
+                    };
 
-            api.post("http://127.0.0.1:5000/tensores", data)
-                .then((response) => {
-                    setRiemann(response.data.result); // Armazene a solução do tensor de Riemann no estado
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        }
+                    api.post("http://127.0.0.1:5000/tensores", dataRiemann)
+                        .then((response) => {
+                            setRiemann(response.data.result);
+                            setExibirCards(true);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                } else {
+                    setExibirCards(true);
+                }
 
-        setExibirCards(true);
+                if (ricciChecked) {
+                    const dataRicci = {
+                        metrica: metricaSelecionada,
+                        tipo: "ricci",
+                    };
+
+                    api.post("http://127.0.0.1:5000/tensores", dataRicci)
+                        .then((response) => {
+                            setRicci(response.data.result);
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                }
+
+                if (ricciScalarChecked) {
+                    const dataRicciScalar = {
+                        metrica: metricaSelecionada,
+                        tipo: "ricciScalar",
+                    };
+
+                    api.post("http://127.0.0.1:5000/tensores", dataRicciScalar)
+                        .then((response) => {
+                            setRicciScalar(response.data.result);
+                        })
+                        .catch((error) => {
+                            onsole.error(error);
+                        });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+            });
     };
 
     const handleResetar = () => {
         setExibirCards(false);
-        setRicciChecked(false);
+        setTensorDaMetricaChecked(false);
         setRiemannChecked(false);
-        setMetricaSelecionada("");
+        setRicciChecked(false);
+        setRicciScalarChecked(false);
+        setMetricaSelecionada(metricas[0].value);
     };
 
     return (
         <>
-            <Metrica onChange={handleMetricaChange} options={metrics} />
+            <Metrica
+                onChange={handleMetricaChange}
+                options={metricas}
+                value={metricaSelecionada}
+            />
             <div className="Tensores">
                 <fieldset>
                     <legend>Escolha o que deseja calcular</legend>
                     <div className="Tensores-checkbox">
+                        <div>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={tensorDaMetricaChecked}
+                                    onChange={handleTensorDaMetricaChange}
+                                />
+                                Tensor da Métrica
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={riemannChecked}
+                                    onChange={handleRiemannChange}
+                                />
+                                Tensor de Riemann
+                            </label>
+                        </div>
                         <div>
                             <label>
                                 <input
@@ -97,10 +175,10 @@ export default function Tensores() {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={riemannChecked}
-                                    onChange={handleRiemannChange}
+                                    checked={ricciScalarChecked}
+                                    onChange={handleRicciScalarChange}
                                 />
-                                Tensor de Riemann
+                                Escalar de Ricci
                             </label>
                         </div>
                     </div>
@@ -111,11 +189,23 @@ export default function Tensores() {
                 </div>
                 {exibirCards && (
                     <div className="Cards">
-                        {ricciChecked && ricci && (
-                            <Card title="Tensor de Ricci" result={ricci} />
+                        {tensorDaMetricaChecked && tensorDaMetrica && (
+                            <Card
+                                title="Tensor da Métrica"
+                                result={tensorDaMetrica}
+                            />
                         )}
                         {riemannChecked && riemann && (
                             <Card title="Tensor de Riemann" result={riemann} />
+                        )}
+                        {ricciChecked && ricci && (
+                            <Card title="Tensor de Ricci" result={ricci} />
+                        )}
+                        {ricciScalarChecked && ricciScalar && (
+                            <Card
+                                title="Escalar de Ricci"
+                                result={ricciScalar}
+                            />
                         )}
                     </div>
                 )}

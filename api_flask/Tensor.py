@@ -108,7 +108,7 @@ class Tensor():
 
 
 if __name__ == '__main__':
-    tensor = Tensor('Schwarzschild')
+    tensor = Tensor('KerrNewman')
 
     print(tensor.get_tensor())
     print(tensor.get_ricci_scalar())
