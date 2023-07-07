@@ -6,7 +6,7 @@ import numpy as np
 
 #Einsteinpy
 import sympy
-from sympy import symbols, sin, Symbol, Function, var
+from sympy import symbols, sin, Symbol, Function, var, diag
 from einsteinpy.symbolic import (MetricTensor,
                                  RicciTensor, RicciScalar,
                                  RiemannCurvatureTensor)
@@ -35,7 +35,7 @@ def index():
 @app.route('/metricas' , methods=['GET'])
 def get_metricas():
     metricas = [
-        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'Davidson'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}
+        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'Davidson'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}, {'value': 'FLRW'}
     ]
     return jsonify(metricas)
 
@@ -87,6 +87,21 @@ class Tensor():
             return DeSitter()
         elif metric_name == 'Ernst':
             return Ernst()
+        elif metric_name == 'FLRW':
+            # Definir a constante k
+            k = symbols('k')
+
+            a = Function('a')
+            # Definir as variaveis das metricas
+            syms = symbols("t  r theta phi")
+            t, r, th, ph = syms
+
+            # Definir o tensor da métrica
+            m = diag(-1, (a(t) ** 2) / (1-k * (r ** 2)),
+                     ((a(t) ** 2) * (r ** 2)),
+                     (((a(t) ** 2) * ((r * sin(th)) ** 2)))).tolist()
+
+            return MetricTensor(m, syms)
         elif metric_name == 'Godel':
             return Godel()
         elif metric_name == 'JanisNewmanWinicour':
