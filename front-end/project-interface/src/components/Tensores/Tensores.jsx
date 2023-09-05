@@ -8,8 +8,6 @@ import Card from "../Card/Card";
 import api from "axios";
 
 export default function Tensores() {
-    
-
     const [metricas, setMetricas] = useState([]);
     const [tensorDaMetricaChecked, setTensorDaMetricaChecked] = useState(false);
     const [ricciChecked, setRicciChecked] = useState(false);
@@ -22,7 +20,7 @@ export default function Tensores() {
     const [ricciScalar, setRicciScalar] = useState(null); //Estado para armazenar a solução
     const [metricaSelecionada, setMetricaSelecionada] = useState(null);
 
-    console.log(metricas)
+    console.log(metricas);
 
     useEffect(() => {
         getMetricas();

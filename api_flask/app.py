@@ -81,8 +81,6 @@ class Tensor():
             return BesselGravitationalWave()
         elif metric_name == 'CMetric':
             return CMetric()
-        elif metric_name == 'Davidson':
-            return Davidson()
         elif metric_name == 'DeSitter':
             return DeSitter()
         elif metric_name == 'Ernst':
