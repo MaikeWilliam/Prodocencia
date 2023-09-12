@@ -6,7 +6,7 @@ import numpy as np
 
 #Einsteinpy
 import sympy
-from sympy import symbols, sin, Symbol, Function, var, diag
+from sympy import symbols, sin, Function, diag
 from einsteinpy.symbolic import (MetricTensor,
                                  RicciTensor, RicciScalar,
                                  RiemannCurvatureTensor)
@@ -15,7 +15,7 @@ from einsteinpy.symbolic.predefined import (AlcubierreWarp, AntiDeSitter,
                                             AntiDeSitterStatic,
                                             BarriolaVilekin, BertottiKasner,
                                             BesselGravitationalWave, CMetric,
-                                            Davidson, DeSitter, Ernst, Godel,
+                                            DeSitter, Ernst, Godel,
                                             JanisNewmanWinicour, Kerr,
                                             KerrNewman, Minkowski,
                                             MinkowskiCartesian, MinkowskiPolar,

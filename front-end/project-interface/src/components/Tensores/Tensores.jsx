@@ -18,9 +18,8 @@ export default function Tensores() {
     const [riemann, setRiemann] = useState(null); //Estado para armazenar a solução
     const [ricci, setRicci] = useState(null); //Estado para armazenar a solução
     const [ricciScalar, setRicciScalar] = useState(null); //Estado para armazenar a solução
-    const [metricaSelecionada, setMetricaSelecionada] = useState(null);
-
-    console.log(metricas);
+    const [metricaSelecionada, setMetricaSelecionada] =
+        useState("Schwarzschild");
 
     useEffect(() => {
         getMetricas();
@@ -110,7 +109,7 @@ export default function Tensores() {
                             setRicciScalar(response.data.result);
                         })
                         .catch((error) => {
-                            onsole.error(error);
+                            console.error(error);
                         });
                 }
             })
