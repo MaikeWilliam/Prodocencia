@@ -35,7 +35,7 @@ def index():
 @app.route('/metricas' , methods=['GET'])
 def get_metricas():
     metricas = [
-        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'Davidson'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}, {'value': 'FLRW'}
+        {'value' :'Schwarzschild'}, {'value' :'AntiDeSitter'}, {'value' :'AntiDeSitterStatic'}, {'value' :'BarriolaVilekin'}, {'value' :'BertottiKasner'}, {'value' :'BesselGravitationalWave'}, {'value' :'CMetric'}, {'value' :'DeSitter'}, {'value' :'Ernst'}, {'value' :'Godel'}, {'value' :'JanisNewmanWinicour'}, {'value' :'Kerr'}, {'value' :'KerrNewman'}, {'value' :'Minkowski'}, {'value' :'MinkowskiCartesian'}, {'value' :'MinkowskiPolar'}, {'value' :'ReissnerNordstorm'}, {'value' :'AlcubierreWarp'}, {'value': 'FLRW'}
     ]
     return jsonify(metricas)
 
