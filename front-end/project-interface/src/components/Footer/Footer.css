@@ -9,5 +9,6 @@
 }
 
 .uerj-logo {
-    width: 20vw;
+    max-width: 50%;
+    height: auto;
 }
