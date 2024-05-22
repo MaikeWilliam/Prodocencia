@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./api_flask
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./api_flask:/app
+    environment:
+      - FLASK_ENV=development
+
+  frontend:
+    build:
+      context: ./front-end/project-interface
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    environment:
+      - VITE_API_URL=http://backend:5000

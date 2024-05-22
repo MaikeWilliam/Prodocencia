@@ -14,3 +14,5 @@ Como baixar o projeto:
 
 6 - Para inicializar a api entre em Prodocencia/api_flask e dê um "python app.py"
 
+7- Para inicializar o docker entre na pasta Prodocencia e dê um "docker-compose up --build"
+
