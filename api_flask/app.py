@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from waitress import serve
 
 # Numpy
 import numpy as np
@@ -128,4 +129,4 @@ class Tensor:
 
 
 if __name__ == "__main__":
-    app.run()
+    serve(app, host="0.0.0.0", port=3000)
