@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from waitress import serve
+import logging
 
 # Numpy
 import numpy as np
@@ -17,6 +18,9 @@ from einsteinpy.symbolic import (
 
 from einsteinpy.symbolic.predefined import Kerr, KerrNewman, Schwarzschild
 
+logging.basicConfig(level=logging.DEBUG)
+
+from Tensor import Tensor
 
 # Criando aplicação
 app = Flask(__name__)
@@ -129,4 +133,5 @@ class Tensor:
 
 
 if __name__ == "__main__":
-    serve(app, host="0.0.0.0", port=3000)
+    logging.debug("Iniciando o servidor")
+    serve(app, host="localhost", port=5000)
