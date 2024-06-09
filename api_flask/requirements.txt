@@ -4,4 +4,3 @@ sympy
 numpy
 flask-cors
 waitress
-logging

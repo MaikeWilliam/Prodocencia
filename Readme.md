@@ -16,3 +16,6 @@ Como baixar o projeto:
 
 7- Para inicializar o docker entre na pasta Prodocencia e dê um "docker-compose up --build"
 
+    O frontend estará acessível em "http://localhost:3000"
+
+    O backend estará acessível em "http://localhost:5000"
