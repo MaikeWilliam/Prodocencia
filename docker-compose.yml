@@ -5,18 +5,26 @@ services:
     build:
       context: ./api_flask
     ports:
-      - "8132:8132"              # era "5000:5000"
+      - "8132:8132"  # Mapeia a porta 8132 do container para a porta 8132 do host
     volumes:
-      - ./api_flask:/app
+      - ./api_flask:/app  # Sincroniza o diretório local com o diretório de trabalho no container
     environment:
       - FLASK_ENV=development
+    networks:
+      - my-network
 
   frontend:
     build:
       context: ./front-end/project-interface
     ports:
-      - "3001:80" 
+      - "3001:80"  # Mapeia a porta 80 do container para a porta 3001 do host
     depends_on:
       - backend
     environment:
-      - VITE_API_URL=http://backend:8132
+      - VITE_API_URL=http://backend:8132  # Variável de ambiente para URL do backend
+    networks:
+      - my-network
+
+networks:
+  my-network:
+    driver: bridge

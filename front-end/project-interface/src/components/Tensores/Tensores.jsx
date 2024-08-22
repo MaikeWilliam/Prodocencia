@@ -5,7 +5,7 @@ import Card from "../Card/Card";
 import api from "axios";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl = "http://10.0.0.106:8132";
+const backendUrl = process.env.VITE_API_URL;
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);
