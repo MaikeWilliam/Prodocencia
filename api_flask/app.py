@@ -20,7 +20,7 @@ from einsteinpy.symbolic.predefined import Kerr, KerrNewman, Schwarzschild
 
 from Tensor import Tensor
 
-print("Iniciando o servidor Flask na porta http://localhost:5000 ")
+print("Iniciando o servidor Flask na porta http://10.0.0.106:8132 ")
 
 
 # Criando aplicação

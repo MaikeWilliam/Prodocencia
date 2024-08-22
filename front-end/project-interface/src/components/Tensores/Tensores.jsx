@@ -5,8 +5,7 @@ import Card from "../Card/Card";
 import api from "axios";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl ="http://localhost:8132";
-//const backendUrl = "http://10.0.0.106:8132";
+const backendUrl = "http://10.0.0.106:8132";
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);
@@ -19,7 +18,8 @@ export default function Tensores() {
     const [riemann, setRiemann] = useState(null);
     const [ricci, setRicci] = useState(null);
     const [ricciScalar, setRicciScalar] = useState(null);
-    const [metricaSelecionada, setMetricaSelecionada] = useState("Schwarzschild");
+    const [metricaSelecionada, setMetricaSelecionada] =
+        useState("Schwarzschild");
 
     useEffect(() => {
         getMetricas();
@@ -195,7 +195,10 @@ export default function Tensores() {
                 {exibirCards && (
                     <div className="Cards">
                         {tensorDaMetricaChecked && tensorDaMetrica && (
-                            <Card title="Tensor da Métrica" result={tensorDaMetrica} />
+                            <Card
+                                title="Tensor da Métrica"
+                                result={tensorDaMetrica}
+                            />
                         )}
                         {riemannChecked && riemann && (
                             <Card title="Tensor de Riemann" result={riemann} />
@@ -204,7 +207,10 @@ export default function Tensores() {
                             <Card title="Tensor de Ricci" result={ricci} />
                         )}
                         {ricciScalarChecked && ricciScalar && (
-                            <Card title="Escalar de Ricci" result={ricciScalar} />
+                            <Card
+                                title="Escalar de Ricci"
+                                result={ricciScalar}
+                            />
                         )}
                     </div>
                 )}
