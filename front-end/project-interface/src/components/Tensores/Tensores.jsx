@@ -5,7 +5,8 @@ import Card from "../Card/Card";
 import api from "axios";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl = "http://10.0.0.106:8132";
+const backendUrl ="http://localhost:8132";
+//const backendUrl = "http://10.0.0.106:8132";
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);
@@ -27,6 +28,7 @@ export default function Tensores() {
     const getMetricas = () => {
         api.get(`${backendUrl}/metricas`)
             .then((response) => {
+                console.log(response.data);
                 setMetricas(response.data);
             })
             .catch((error) => {

@@ -9,7 +9,8 @@ function App() {
         <>
             <Header />
             <div className="body">
-                <Tensores />
+                <Tensores  />
+
             </div>
             <Footer />
         </>
