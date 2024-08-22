@@ -14,8 +14,10 @@ COPY app.py /app/
 COPY Tensor.py /app/
 
 # porta que o aplicativo vai rodar
-EXPOSE 5000
+# EXPOSE 5000
+EXPOSE 8132
 
 # Comando para rodar a aplicação usando waitress
 # CMD ["python", "/app/app.py"]
-CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "app:app"]
+# CMD ["waitress-serve", "--host=0.0.0.0", "--port=5000", "app:app"]
+CMD ["waitress-serve", "--host=0.0.0.0", "--port=8132", "app:app"]

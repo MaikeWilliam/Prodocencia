@@ -20,6 +20,9 @@ from einsteinpy.symbolic.predefined import Kerr, KerrNewman, Schwarzschild
 
 from Tensor import Tensor
 
+print("Iniciando o servidor Flask na porta http://localhost:5000 ")
+
+
 # Criando aplicação
 app = Flask(__name__)
 CORS(app)
@@ -131,4 +134,4 @@ class Tensor:
 
 
 if __name__ == "__main__":
-    serve(app, host="localhost", port=5000)
+    serve(app, host="0.0.0.0", port=8132)
