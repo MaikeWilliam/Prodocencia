@@ -22,9 +22,9 @@ from Tensor import Tensor
 
 print("Iniciando o servidor Flask na porta http://10.0.0.106:8132 ")
 
-
 # Criando aplicação
 app = Flask(__name__)
+app.config['APPLICATION_ROOT'] = '/projeto3'  # Define o APPLICATION_ROOT
 CORS(app)
 
 
@@ -33,7 +33,7 @@ CORS(app)
 def index():
     return jsonify({"message": "Hello world"})
 
-
+# Rota para métricas
 @app.route("/metricas", methods=["GET"])
 def get_metricas():
     metricas = [
@@ -44,8 +44,7 @@ def get_metricas():
     ]
     return jsonify(metricas)
 
-
-# Rota Tensores
+# Rota para cálculos de tensores
 @app.route("/tensores", methods=["POST"])
 def calcular_tensores():
     metrica = request.json["metrica"]
@@ -66,7 +65,7 @@ def calcular_tensores():
 
     return jsonify(result=result)
 
-
+# Classe Tensor
 class Tensor:
     def __init__(self, metric="Schwarzschild"):
         self.__metric = self.__get_metric(metric)
@@ -74,15 +73,10 @@ class Tensor:
     def __get_metric(self, metric_name):  # noqa: C901
         """Retorna uma metrica prédefinida usando o nome informado."""
         if metric_name == "FLRW":
-            # Definir a constante k
             k = symbols("k")
-
             a = Function("a")
-            # Definir as variaveis das metricas
             syms = symbols("t  r theta phi")
             t, r, th, ph = syms
-
-            # Definir o tensor da métrica
             m = diag(
                 -1,
                 (a(t) ** 2) / (1 - k * (r**2)),
@@ -101,37 +95,21 @@ class Tensor:
             raise ValueError("Metrica não implementada.")
 
     def get_tensor(self):
-        """Retorna o tensor da metrica.
-
-        Resposta para Schwarzschild:
-            [[1 - r_s/r, 0, 0, 0], [0, -1/(c**2*(1 - r_s/r)), 0, 0], [0, 0, -r**2/c**2, 0], [0, 0, 0, -r**2*sin(theta)**2/c**2]]
-        """
+        """Retorna o tensor da metrica."""
         return str(self.__metric.tensor())
 
     def get_ricci_scalar(self):
-        """Retorna o escalar de Ricci.
-
-        Resposta para Schwarzschild:
-            0
-        """
+        """Retorna o escalar de Ricci."""
         return str(RicciScalar.from_metric(self.__metric).expr)
 
     def get_ricci_tensor(self):
-        """Retorna o tensor de Ricci.
-
-        Resposta para Schwarzschild:
-            [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]
-        """
+        """Retorna o tensor de Ricci."""
         return str(RicciTensor.from_metric(self.__metric).tensor())
 
     def get_riemann_tensor(self):
-        """Retorna o tensor de Riemann.
-
-        Resposta para Schwarzschild:
-            [[[[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, r_s/(r**2*(r - r_s)), 0, 0], [-r_s/(r**2*(r - r_s)), 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, -r_s/(2*r), 0], [0, 0, 0, 0], [r_s/(2*r), 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, -r_s*sin(theta)**2/(2*r)], [0, 0, 0, 0], [0, 0, 0, 0], [r_s*sin(theta)**2/(2*r), 0, 0, 0]]], [[[0, r_s*c**2*(r - r_s)/r**4, 0, 0], [r_s*c**2*(-r + r_s)/r**4, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, -r_s/(2*r), 0], [0, r_s/(2*r), 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, -r_s*sin(theta)**2/(2*r)], [0, 0, 0, 0], [0, r_s*sin(theta)**2/(2*r), 0, 0]]], [[[0, 0, r_s*c**2*(-r + r_s)/(2*r**4), 0], [0, 0, 0, 0], [r_s*c**2*(r - r_s)/(2*r**4), 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, r_s/(2*r**2*(r - r_s)), 0], [0, -r_s/(2*r**2*(r - r_s)), 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, r_s*sin(theta)**2/r], [0, 0, -r_s*sin(theta)**2/r, 0]]], [[[0, 0, 0, r_s*c**2*(-r + r_s)/(2*r**4)], [0, 0, 0, 0], [0, 0, 0, 0], [r_s*c**2*(r - r_s)/(2*r**4), 0, 0, 0]], [[0, 0, 0, 0], [0, 0, 0, r_s/(2*r**2*(r - r_s))], [0, 0, 0, 0], [0, -r_s/(2*r**2*(r - r_s)), 0, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, -r_s/r], [0, 0, r_s/r, 0]], [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]]]]
-        """
+        """Retorna o tensor de Riemann."""
         return str(RiemannCurvatureTensor.from_metric(self.__metric).tensor())
 
-
 if __name__ == "__main__":
+    # Iniciando o servidor com o APPLICATION_ROOT configurado
     serve(app, host="0.0.0.0", port=8132)
