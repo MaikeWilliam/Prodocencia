@@ -15,7 +15,7 @@ COPY Tensor.py /app/
 
 # porta que o aplicativo vai rodar
 # EXPOSE 5000
-EXPOSE 8132
+EXPOSE 8121
 
 # Comando para rodar a aplicação usando waitress
 # CMD ["python", "/app/app.py"]

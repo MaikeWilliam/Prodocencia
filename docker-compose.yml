@@ -5,7 +5,7 @@ services:
     build:
       context: ./api_flask
     ports:
-      - "8121:8132"  # Porta 8121 no host mapeada para a 8132 no container
+      - "8121:8121"  # Porta 8121 no host mapeada para a 8132 no container
     volumes:
       - ./api_flask:/app
     environment:
@@ -20,8 +20,6 @@ services:
       - "8120:80"  # Porta 8120 no host mapeada para a 80 no container
     depends_on:
       - backend
-    environment:
-      - VITE_API_URL=http://backend:8132/projeto3 # URL do backend dentro da rede Docker
     networks:
       - my-network
 
