@@ -5,7 +5,7 @@ import Metrica from "../Metric/Metrica";
 import "./Tensores.css";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl = "http://localhost:8121";
+const backendUrl = import.meta.env.VITE_API_ENDPOINT ?? "http://localhost:8121";
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);

@@ -1,3 +1,4 @@
+
 # Use a imagem oficial do Node.js como a base
 FROM node:latest AS build
 
@@ -22,6 +23,8 @@ COPY --from=build /app/dist /usr/share/nginx/html
 
 # Exponha a porta 80
 EXPOSE 80 
+
+ENV VITE_API_ENDPOINT="http://cloudhub.iprj.uerj.br/projeto2-1/"
 
 # Comando para rodar o servidor web
 CMD ["nginx", "-g", "daemon off;"]

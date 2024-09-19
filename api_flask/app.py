@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from waitress import serve
 
+
 # Numpy
 import numpy as np
 
@@ -25,7 +26,7 @@ print("Iniciando o servidor Flask na porta http://10.0.0.106:8081 ")
 # Criando aplicação
 app = Flask(__name__)
 app.config['APPLICATION_ROOT'] = '/projeto3'  # Define o APPLICATION_ROOT
-CORS(app)
+CORS(app, resources={r"*": {"origins": "*"}})
 
 
 # Rota Default
