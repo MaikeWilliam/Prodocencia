@@ -4,18 +4,12 @@ Como baixar o projeto:
 
 1 - Entrar no repositório do github e copiar o link
 
-2 - Criar uma pasta e dar um "git clone url(link do repositório)"
+2 - Criar uma pasta e dar um "git clone https://github.com/MaikeWilliam/Prodocencia"
 
-3 - Na pasta project-interface dar um "npm install"
+3 - Ter Docker instalado e aplicar "docker compose up --build -d"
 
-4 - Na pasta api_flask dar um "pip install -r requirements.txt"
+4- Acesse o projeto frontend e backend:
 
-5 - Para inicializar a página web entre em Prodocencia/front-end/project-interface e dê um "npm run dev"
+    O frontend estará acessível em "http://localhost:8120"
 
-6 - Para inicializar a api entre em Prodocencia/api_flask e dê um "python app.py"
-
-7- Para inicializar o docker entre na pasta Prodocencia e dê um "docker-compose up --build"
-
-    O frontend estará acessível em "http://localhost:3000"
-
-    O backend estará acessível em "http://localhost:5000"
+    O backend estará acessível em "http://localhost:8121"
