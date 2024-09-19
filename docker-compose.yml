@@ -1,11 +1,9 @@
-version: '3.8'
-
 services:
   backend:
     build:
       context: ./api_flask
     ports:
-      - "8121:8121"  # Porta 8121 no host mapeada para a 8132 no container
+      - "8121:8081"  # Isso mapeia a porta 8081 no container para a 8121 no host
     volumes:
       - ./api_flask:/app
     environment:

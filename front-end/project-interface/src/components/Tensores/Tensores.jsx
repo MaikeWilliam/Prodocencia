@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import "./Tensores.css";
-import Metrica from "../Metric/Metrica";
-import Card from "../Card/Card";
 import api from "axios";
+import { useEffect, useState } from "react";
+import Card from "../Card/Card";
+import Metrica from "../Metric/Metrica";
+import "./Tensores.css";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl = "http://backend:8132";
+const backendUrl = "http://localhost:8121";
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);
