@@ -5,7 +5,11 @@ import Metrica from "../Metric/Metrica";
 import "./Tensores.css";
 
 // URL do backend com o IP e a porta corretos
-const backendUrl = import.meta.env.VITE_API_ENDPOINT ?? "http://localhost:8121";
+// const backendUrl = import.meta.env.VITE_API_ENDPOINT ?? "http://localhost:8121";
+const backendUrl = window.location.hostname === "localhost"
+  ? "http://localhost:8121" // URL para desenvolvimento local
+  : "https://cloudhub.iprj.uerj.br/projeto2-1"; // URL para produção
+
 
 export default function Tensores() {
     const [metricas, setMetricas] = useState([]);
