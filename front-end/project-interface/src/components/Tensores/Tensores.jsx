@@ -157,7 +157,7 @@ export default function Tensores() {
                                     checked={tensorDaMetricaChecked}
                                     onChange={handleTensorDaMetricaChange}
                                 />
-                                Tensor da Métrica
+                                Tensor Métrico
                             </label>
                         </div>
                         <div>
@@ -200,7 +200,7 @@ export default function Tensores() {
                     <div className="Cards">
                         {tensorDaMetricaChecked && tensorDaMetrica && (
                             <Card
-                                title="Tensor da Métrica"
+                                title="Tensor Métrico"
                                 result={tensorDaMetrica}
                             />
                         )}
